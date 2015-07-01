@@ -9,7 +9,7 @@ public class AboutPrimitives {
 
 	@Koan
 	public void wholeNumbersAreOfTypeInt() {
-		assertEquals(getType(1), __); // hint: int.class
+		assertEquals(getType(1), new Integer(1)); // hint: int.class
 	}
 
 	@Koan
