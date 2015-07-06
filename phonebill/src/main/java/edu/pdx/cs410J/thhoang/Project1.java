@@ -3,7 +3,7 @@ package edu.pdx.cs410J.thhoang;
 import edu.pdx.cs410J.AbstractPhoneBill;
 
 /**
- * The main class for the CS410J Phone Bill Project
+ * The main class for the CS410J Phone Bill Project 1
  */
 public class Project1 {
 
