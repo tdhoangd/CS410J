@@ -23,7 +23,7 @@ public class Student extends Human {
    *        The student's gender ("male" or "female", case insensitive)             
    */                                                                               
   public Student(String name, ArrayList classes, double gpa, String gender) {
-
+    super(name);
   }
 
   /**                                                                               
@@ -31,7 +31,7 @@ public class Student extends Human {
    */
   @Override
   public String says() {                                                            
-
+    return "too much work";
   }
                                                                                     
   /**                                                                               
@@ -39,7 +39,7 @@ public class Student extends Human {
    * <code>Student</code>.                                                          
    */                                                                               
   public String toString() {
-
+    throw new UnsupportedOperationException("Not immplemented yet");
   }
 
   /**
@@ -48,6 +48,9 @@ public class Student extends Human {
    * standard out by invoking its <code>toString</code> method.
    */
   public static void main(String[] args) {
-
+    if (args.length == 0) {
+      System.err.println("Missing command line arguments");
+      System.exit(1);
+    }
   }
 }
