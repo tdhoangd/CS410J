@@ -23,13 +23,13 @@ public class AboutPrimitives {
 
 	@Koan
 	public void integersHaveAFairlyLargeRange() {
-		assertEquals(Integer.MIN_VALUE, Integer.MIN_VALUE);
-		assertEquals(Integer.MAX_VALUE, Integer.MAX_VALUE);
+		assertEquals(Integer.MIN_VALUE, -2147483648);
+		assertEquals(Integer.MAX_VALUE, 2147483647);
 	}
 
 	@Koan
 	public void integerSize() {
-		assertEquals(Integer.SIZE, Integer.SIZE);  // This is the amount of bits used to store an int
+		assertEquals(Integer.SIZE, 32);  // This is the amount of bits used to store an int
 	}
 
 	@Koan
@@ -45,13 +45,13 @@ public class AboutPrimitives {
 
 	@Koan
 	public void longsHaveALargerRangeThanInts() {
-		assertEquals(Long.MIN_VALUE, Long.MIN_VALUE);
-		assertEquals(Long.MAX_VALUE, Long.MAX_VALUE);
+		assertEquals(Long.MIN_VALUE, -9223372036854775808l);
+		assertEquals(Long.MAX_VALUE, 9223372036854775807l);
 	}
 
 	@Koan
 	public void longSize() {
-		assertEquals(Long.SIZE, Long.SIZE);
+		assertEquals(Long.SIZE, 64);
 	}
 
 	@Koan
