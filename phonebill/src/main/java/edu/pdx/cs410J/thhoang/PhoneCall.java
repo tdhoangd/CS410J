@@ -18,50 +18,20 @@ public class PhoneCall extends AbstractPhoneCall {
      *      Phone number of person who originated this phone call
      * @param calleeNumber
      *      Phone number of person who received this phone call
-     * @param startTime
+     * @param startTimeString
      *      Start time of the phone call
      * @param endTimeString
      *      End time of the phone call
      */
     public PhoneCall(String callerNumber, String calleeNumber, String startTimeString, String endTimeString) {
         super();
-        setCallerNumber(callerNumber);
-        setCalleeNumber(calleeNumber);
-        setStartTimeString(startTimeString);
-        setEndTimeString(endTimeString);
-    }
-
-    /**
-     *
-     * @param endTimeString
-     */
-    private void setEndTimeString(String endTimeString) {
-        this.endTimeString = endTimeString;
-    }
-
-    /**
-     *
-     * @param startTimeString
-     */
-    private void setStartTimeString(String startTimeString) {
-        this.startTimeString = startTimeString;
-    }
-
-    /**
-     *
-     * @param callerNumber
-     */
-    private void setCallerNumber(String callerNumber) {
         this.callerNumber = callerNumber;
+        this.calleeNumber = calleeNumber;
+        this.startTimeString = startTimeString;
+        this.endTimeString = endTimeString;
+
     }
 
-    /**
-     *
-     * @param calleeNumber
-     */
-    private void setCalleeNumber(String calleeNumber) {
-        this.calleeNumber = calleeNumber;
-    }
 
     /**
      * Returns the phone number of the person who originated this phone
