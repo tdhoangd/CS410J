@@ -702,7 +702,7 @@
       <workItem from="1436125496930" duration="1987000" />
       <workItem from="1436133238443" duration="2291000" />
       <workItem from="1436138590769" duration="2412000" />
-      <workItem from="1436210166694" duration="25571000" />
+      <workItem from="1436210166694" duration="25576000" />
     </task>
     <task id="LOCAL-00001" summary="Done implement and test PhoneCall">
       <created>1436213851403</created>
@@ -746,11 +746,17 @@
       <option name="project" value="LOCAL" />
       <updated>1436330142018</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Edited phonebill and phonecall, and finished junit test for project 1">
+      <created>1436330173742</created>
+      <option name="number" value="00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1436330173742</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36376000" />
+    <option name="totallyTimeSpent" value="36381000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
