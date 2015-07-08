@@ -29,8 +29,8 @@ public class PhoneBill extends AbstractPhoneBill {
 
     /**
      * Return the name of the customer whose bill this is
-     * @return
-     *      customerName
+     * @return customerName
+     *
      */
     @Override
     public String getCustomer() {
@@ -40,9 +40,8 @@ public class PhoneBill extends AbstractPhoneBill {
     /**
      * Add a phone call to this phone bill
      * @param call
-     *
+     *      a PhoneCall object
      */
-    @SuppressWarnings("JavaDoc")
     @Override
     public void addPhoneCall(AbstractPhoneCall call) {
         collection.add(call);
@@ -50,8 +49,8 @@ public class PhoneBill extends AbstractPhoneBill {
 
     /**
      * Return all of phone calls in this phone bill
-     * @return
-     *       collection
+     * @return collection
+     *
      */
     @Override
     public Collection getPhoneCalls() {

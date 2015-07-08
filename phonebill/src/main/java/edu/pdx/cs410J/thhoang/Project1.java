@@ -79,9 +79,9 @@ public class Project1 {
 
         // validate arguments format
         if (!checkPhoneNumber(callerNumber)) {
-            printErrMessageAndExit("CallerNumber is not input in the right format: nnn-nnn-nnnn (where n is 0-9)");
+            printErrMessageAndExit("callerNumber is not input in the right format: nnn-nnn-nnnn (where n is 0-9)");
         } else if (!checkPhoneNumber(calleeNumber)) {
-            printErrMessageAndExit("CalleeNumber is not input is the right format: nnn-nnn-nnnn (where n is 0-9)");
+            printErrMessageAndExit("calleeNumber is not input in the right format: nnn-nnn-nnnn (where n is 0-9)");
         } else if (!checkDateFormat(startDate)) {
             printErrMessageAndExit("startDate is not input in the right format: mm/dd/yyyy");
         } else if (!checkTimeFormat(startTime)) {
@@ -121,6 +121,11 @@ public class Project1 {
         System.exit(1);
     }
 
+    /**
+     * Validate a date is in mm/dd/yyyy or not
+     * @param date
+     * @return boolean
+     */
     private static boolean checkDateFormat(String date) {
 
         if (date.matches("\\d{2}/\\d{2}/\\d{4}"))
@@ -136,6 +141,11 @@ public class Project1 {
 
     }
 
+    /**
+     * Validate if time is in hh:mm format or not
+     * @param time
+     * @return boolean
+     */
     private static boolean checkTimeFormat(String time) {
 
         if (time.matches("\\d{2}:\\d{2}"))
@@ -151,6 +161,11 @@ public class Project1 {
         }
     }
 
+    /**
+     * Validate if the phone number is in the format nnn-nnn-nnnn
+     * @param phoneNumberString
+     * @return boolean
+     */
     private static boolean checkPhoneNumber(String phoneNumberString) {
 
         if (phoneNumberString.matches("\\d{3}-\\d{3}-\\d{4}"))
@@ -160,6 +175,9 @@ public class Project1 {
 
     }
 
+    /**
+     * Print out README.txt file and exit program.
+     */
     private static void printReadMeAndExit() {
         File f = new File("README.txt");
 
@@ -188,6 +206,10 @@ public class Project1 {
         }
     }
 
+    /**
+     * Print out error message and exit program.
+     * @param message
+     */
     private static void printErrMessageAndExit(String message) {
         System.err.println(message);
         System.exit(1);

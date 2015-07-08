@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.util.Collection;
 import java.util.Date;
 import java.text.*;
+import java.lang.String;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
@@ -16,11 +17,64 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertTrue;
 
 
-
 /**
  * Tests the functionality in the {@link Project1} main class.
  */
 public class Project1Test extends InvokeMainTestCase {
+
+
+
+    @Test
+    public void testMainMethoWithWrongInputFormat() {
+
+        MainMethodResult  rs;
+
+        rs = invokeMain("-print", "Thanh Hoang", "0000-222-3333", "222-333-4444", "7/5/2015", "10:22", "7/5/2015", "11:00");
+        assertTrue(rs.getErr().contains("callerNumber is not input in the right format"));
+
+        rs = invokeMain("-print", "Thanh Hoang", "000-222-3333", "2223334444", "7/5/2015", "10:22", "7/5/2015", "11:00");
+        assertTrue(rs.getErr().contains("calleeNumber is not input in the right format"));
+
+        rs = invokeMain("-print", "Thanh Hoang", "000-222-3333", "222-333-4444", "7:5:201", "10:22", "7/5/2015", "11:00");
+        assertTrue(rs.getErr().contains("startDate is not input in the right format"));
+
+        rs = invokeMain("-print", "Thanh Hoang", "000-222-3333", "222-333-4444", "7/5/2015", "1A:22", "7/5/2015", "11:00");
+        assertTrue(rs.getErr().contains("startTime is not input in the right format"));
+
+        rs = invokeMain("-print", "Thanh Hoang", "000-222-3333", "222-333-4444", "7/5/2015", "10:22", "7A/5/2015", "11:00");
+        assertTrue(rs.getErr().contains("endDate is not input in the right format"));
+
+        rs = invokeMain("-print", "Thanh Hoang", "000-222-3333", "222-333-4444", "7/5/2015", "10:22", "7/5/2015", "1100");
+        assertTrue(rs.getErr().contains("endTime is not input in the right format"));
+
+
+    }
+
+    @Test
+    public void testMainMethoMissingArgument() {
+
+        MainMethodResult rs = invokeMain("-print", "Thanh Hoang", "000-222-444", "111-222-3333", "7/5/2015");
+        assertTrue(rs.getErr().contains("Missing startTime"));
+
+        rs = invokeMain("-print", "Thanh Hoang", "000-222-444");
+        assertTrue(rs.getErr().contains("Missing calleeNumber"));
+
+        rs = invokeMain("-print", "Thanh Hoang", "000-222-444", "333-333-2222");
+        assertTrue(rs.getErr().contains("Missing startDate"));
+
+        rs = invokeMain("-print", "Thanh Hoang", "000-222-444", "333-222-3333", "1/1/2015", "10:20");
+        assertTrue(rs.getErr().contains("Missing endDate"));
+
+        rs = invokeMain("-print", "Thanh Hoang", "000-222-444", "333-222-3333", "1/1/2015", "10:20", "3/2/2015");
+        assertTrue(rs.getErr().contains("Missing endTime"));
+    }
+
+    @Test
+    public void testMainMethodContainReadMe() {
+
+        MainMethodResult rs = invokeMain("-README", "-print", "Thanh Hoang", "000-222-444", "111-222-3333", "7/5/2015");
+        System.out.println(rs.getOut());
+    }
 
     @Test
     public void testString() {
@@ -64,8 +118,8 @@ public class Project1Test extends InvokeMainTestCase {
 
         PhoneCall phonecall = new PhoneCall(callerNo, calleeNo,starTime, endTime );
 
-        assertThat("Caller numbers should be similar",phonecall.getCaller(), is("000-111-2222"));
-        assertThat("Callee numbers should be the same", phonecall.getCallee(), is("000-222-3333"));
+        assertThat(phonecall.getCaller(), is("000-111-2222"));
+        assertThat(phonecall.getCallee(), is("000-222-3333"));
         assertThat(phonecall.getStartTimeString(), is("1/15/2015 19:00"));
         assertThat(phonecall.getEndTimeString(), is("1/15/2015 19:30"));
         
