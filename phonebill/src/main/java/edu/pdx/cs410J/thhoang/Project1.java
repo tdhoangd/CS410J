@@ -41,6 +41,10 @@ public class Project1 {
             }
         }
 
+        if (arguments.size() > 7) {
+            printErrMessageAndExit("Error: There are extraneous command line arguments ");
+        }
+
         for (String arg : arguments) {
 
             if (customer == null) {
