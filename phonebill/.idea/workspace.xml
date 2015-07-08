@@ -2,10 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="717c6c48-278f-4004-9966-c825d824cf8d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/pdx/cs410J/thhoang/PhoneBill.java" afterPath="$PROJECT_DIR$/src/main/java/edu/pdx/cs410J/thhoang/PhoneBill.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/edu/pdx/cs410J/thhoang/Project1.java" afterPath="$PROJECT_DIR$/src/main/java/edu/pdx/cs410J/thhoang/Project1.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/test/java/edu/pdx/cs410J/thhoang/Project1Test.java" afterPath="$PROJECT_DIR$/src/test/java/edu/pdx/cs410J/thhoang/Project1Test.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="phonebill.iws" />
@@ -706,7 +702,7 @@
       <workItem from="1436125496930" duration="1987000" />
       <workItem from="1436133238443" duration="2291000" />
       <workItem from="1436138590769" duration="2412000" />
-      <workItem from="1436210166694" duration="25474000" />
+      <workItem from="1436210166694" duration="25571000" />
     </task>
     <task id="LOCAL-00001" summary="Done implement and test PhoneCall">
       <created>1436213851403</created>
@@ -744,11 +740,17 @@
       <option name="project" value="LOCAL" />
       <updated>1436319489071</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Edited phonebill and phonecall, and finished junit test for project 1">
+      <created>1436330142018</created>
+      <option name="number" value="00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1436330142018</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36279000" />
+    <option name="totallyTimeSpent" value="36376000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -810,7 +812,8 @@
     <MESSAGE value="Update student" />
     <MESSAGE value="commit workspace" />
     <MESSAGE value="Successful run project1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Successful run project1" />
+    <MESSAGE value="Edited phonebill and phonecall, and finished junit test for project 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="Edited phonebill and phonecall, and finished junit test for project 1" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
