@@ -6,6 +6,7 @@ import edu.pdx.cs410J.AbstractPhoneCall;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -18,19 +19,17 @@ public class PhoneBill extends AbstractPhoneBill {
 
     /**
      * Constructor of PhoneBill class
-     * @param name
-     *      CustomerName
+     * @param name CustomerName
      */
     public PhoneBill(String name) {
         super();
         this.customerName = name;
-        this.collection = new ArrayList<AbstractPhoneCall>();
+        // this.collection = new ArrayList<PhoneCall>();
     }
 
     /**
      * Return the name of the customer whose bill this is
      * @return customerName
-     *
      */
     @Override
     public String getCustomer() {
@@ -39,8 +38,7 @@ public class PhoneBill extends AbstractPhoneBill {
 
     /**
      * Add a phone call to this phone bill
-     * @param call
-     *      a PhoneCall object
+     * @param call a PhoneCall object
      */
     @Override
     public void addPhoneCall(AbstractPhoneCall call) {
@@ -50,7 +48,6 @@ public class PhoneBill extends AbstractPhoneBill {
     /**
      * Return all of phone calls in this phone bill
      * @return collection
-     *
      */
     @Override
     public Collection getPhoneCalls() {
@@ -59,6 +56,6 @@ public class PhoneBill extends AbstractPhoneBill {
 
 
     private final String customerName;
-    private final Collection collection;
+    private final List<AbstractPhoneCall> collection = new ArrayList<AbstractPhoneCall>();
 
 }

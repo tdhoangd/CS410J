@@ -2,7 +2,6 @@ package edu.pdx.cs410J.thhoang;
 
 import edu.pdx.cs410J.AbstractPhoneCall;
 
-import java.util.Date;
 
 /**
  * This class represents a phone call between a caller (the
@@ -13,6 +12,7 @@ import java.util.Date;
 public class PhoneCall extends AbstractPhoneCall {
 
     /**
+     * Create a new <code>PhoneCall</code>
      *
      * @param callerNumber
      *      Phone number of person who originated this phone call
@@ -36,8 +36,7 @@ public class PhoneCall extends AbstractPhoneCall {
     /**
      * Returns the phone number of the person who originated this phone
      * call.
-     * @return
-     *      Return the callerNumber
+     * @return Return the callerNumber
      */
     @Override
     public String getCaller() {
@@ -47,8 +46,7 @@ public class PhoneCall extends AbstractPhoneCall {
     /**
      * Returns the phone number of the person who received this phone
      * call
-     * @return
-     *      Return the calleeNumber
+     * @return Return the calleeNumber
      */
     @Override
     public String getCallee() {
@@ -58,8 +56,7 @@ public class PhoneCall extends AbstractPhoneCall {
     /**
      * Returns a textual representation of the time that this phone call
      * was originated.
-     * @return
-     *      startTimeString
+     * @return startTimeString
      */
     @Override
     public String getStartTimeString() {
@@ -69,8 +66,7 @@ public class PhoneCall extends AbstractPhoneCall {
     /**
      * Returns a textual representation of the time that this phone call
      * was completed.
-     * @return
-     *      endTimeString
+     * @return endTimeString
      */
     @Override
     public String getEndTimeString() {
