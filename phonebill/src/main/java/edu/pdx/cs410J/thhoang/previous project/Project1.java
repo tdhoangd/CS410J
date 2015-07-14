@@ -1,18 +1,17 @@
 package edu.pdx.cs410J.thhoang;
 
+
 import edu.pdx.cs410J.AbstractPhoneBill;
 import edu.pdx.cs410J.AbstractPhoneCall;
-import edu.pdx.cs410J.ParserException;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.lang.String;
 import java.util.ArrayList;
 
 /**
- * The main class for CS410J Phone Bill Project 2,
- * (working with text file)
+ * The main class for the CS410J Phone Bill Project 1
  */
-public class Project2 {
+public class Project1 {
 
     public static void main(String[] args) {
         String customer = null;
@@ -24,59 +23,22 @@ public class Project2 {
         String endTime = null;
         ArrayList<String> options = new ArrayList<String>();
         ArrayList<String> arguments = new ArrayList<String>();
-        String filePath = null;
-        boolean optTextFile = false;
-        File file = null;
 
         if (args.length == 0) {
             printErrMessageAndExit("Missing command line arguments");
         }
 
-        for (int i=0; i<args.length; i++) {
-
-            if (args[i].charAt(0) == '-') {
-                options.add(args[i]);
-                if(args[i].equals("-textFile")) {
-                    optTextFile = true;
-                    if (i < (args.length -1)){
-                        filePath = args[i+1];
-                        i++;
-                    }
-                }
-            } else
-                arguments.add(args[i]);
-
+        for (String arg : args) {
+            if (arg.charAt(0) == '-')
+                options.add(arg);
+            else
+                arguments.add(arg);
         }
 
         for (String opt : options) {
             if (opt.equals("-README")) {
                 printReadMeAndExit();
             }
-        }
-
-        // check weird option
-        for (String opt: options) {
-
-            switch (opt){
-                case "-print":
-                    break;
-                case "-README":
-                    break;
-                case "-textFile":
-                    break;
-                default:
-                    printErrMessageAndExit("Error: option" + opt +" not found");
-                    break;
-            }
-
-        }
-
-        // check args: -textFile + file path
-        if (optTextFile) {
-            if (filePath == null)
-                printErrMessageAndExit("Error: missing file path");
-            else if (filePath.charAt(0) == '-')
-                printErrMessageAndExit("Error: missing file path");
         }
 
         if (arguments.size() > 7) {
@@ -135,64 +97,37 @@ public class Project2 {
         }
 
         // add new phone call to collection
-        AbstractPhoneBill phonebill = null;
+        AbstractPhoneBill newBill;
         AbstractPhoneCall aCall;
 
-        // create a new phone call
-        String start = startDate + " " + startTime;
-        String end = endDate + " " + endTime;
-        aCall = new PhoneCall(callerNumber, calleeNumber, start, end);
+        try {
+            String start = startDate + " " + startTime;
+            String end = endDate + " " + endTime;
 
-        for (String opt: options) {
-            if (opt.equals("-print")) {
-                System.out.println("Description of new phone call");
-                System.out.println(aCall.toString());
-            }
-        }
+            newBill = new PhoneBill(customer);
+            aCall = new PhoneCall(callerNumber, calleeNumber, start, end);
+            newBill.addPhoneCall(aCall);
 
-        if (optTextFile && (filePath != null)) {
+            System.out.println("Successful added new phone call");
 
-            try {
-                TextParser tp = new TextParser(new File(filePath));
-                phonebill = tp.parse();
-
-                System.out.println("Loading text file");
-                if (!phonebill.getCustomer().equals(customer)){
-                    printErrMessageAndExit("Error: customer given from command line is different that the one in the text file");
+            for (String s : options) {
+                if (s.equals("-print")) {
+                    System.out.println("Description of new phone call: ");
+                    System.out.println(aCall.toString());
                 }
-                System.out.println("Loaded text file");
-
-            } catch (ParserException e) {
-                System.err.println(e.getMessage());
-                System.err.println("Error: can't parse text file to phone bill.");
             }
 
+        } catch (Exception e) {
+            printErrMessageAndExit("Fail to add new phone call");
         }
 
-
-        if (optTextFile && (filePath != null)) {
-
-            if (phonebill == null) {
-                phonebill = new PhoneBill(customer);
-            }
-
-            phonebill.addPhoneCall(aCall);
-            TextDumper td = new TextDumper(new File(filePath));
-
-            try {
-                td.dump(phonebill);
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
-                printErrMessageAndExit("Error: cant dump phone bill to text file");
-            }
-        }
 
         System.exit(1);
     }
 
     /**
      * Validate a date is in mm/dd/yyyy or not
-     * @param date string date format in form mm/dd/yyyy
+     * @param date
      * @return boolean
      */
     private static boolean checkDateFormat(String date) {
@@ -203,13 +138,16 @@ public class Project2 {
             return true;
         else if (date.matches("\\d{2}/\\d{1}/\\d{4}"))
             return true;
-        else return date.matches("\\d{1}/\\d{1}/\\d{4}");
+        else if (date.matches("\\d{1}/\\d{1}/\\d{4}"))
+            return true;
+        else
+            return false;
 
     }
 
     /**
      * Validate if time is in hh:mm format or not
-     * @param time time string in form hh:mm
+     * @param time
      * @return boolean
      */
     private static boolean checkTimeFormat(String time) {
@@ -220,17 +158,24 @@ public class Project2 {
             return true;
         } else if (time.matches("\\d{1}:\\d{2}")) {
             return true;
-        } else return time.matches("\\d{1}:\\d{1}");
+        } else if (time.matches("\\d{1}:\\d{1}")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
      * Validate if the phone number is in the format nnn-nnn-nnnn
-     * @param phoneNumberString phone number string in form nnn-nnn-nnnn
+     * @param phoneNumberString
      * @return boolean
      */
     private static boolean checkPhoneNumber(String phoneNumberString) {
 
-        return phoneNumberString.matches("\\d{3}-\\d{3}-\\d{4}");
+        if (phoneNumberString.matches("\\d{3}-\\d{3}-\\d{4}"))
+            return  true;
+        else
+            return false;
 
     }
 
@@ -239,31 +184,57 @@ public class Project2 {
      */
     private static void printReadMeAndExit() {
 
-        System.out.println("Project 2");
+        System.out.println("Project 1");
         System.out.println("@author: Thanh Hoang");
-        System.out.println("This project is built from project 1, and it can handle read and write PhoneBill from or to text file.");
-
+        System.out.println("This project is designed to build fundamental PhoneBill and PhoneCall classes, and project1 class that parses the commmand line.");
         System.out.println("The command line has to be in this order:");
         System.out.println("\t[options] <args>");
         System.out.println("options are:");
         System.out.println("\t-print\t\tprints a description of the new phone call");
         System.out.println("\t-README\t\tprints a README for this project and exits\n");
-        System.out.println("\t-textFile file \t\t Where to read/write the phone bill");
         System.out.println("args are (in this order):");
         System.out.println("\tcustomer\tperson whose phone bill we're modeling");
         System.out.println("\tcallerNumber\tPhone number of caller (in format nnn-nnn-nnnn)");
         System.out.println("\tcalleeNumber\tphone number of person who was called (in format nnn-nnn-nnnn)");
         System.out.println("\tstartTime\tDate and time call began (24- hour time)");
         System.out.println("\tendTime \tDate and time call end (24-hour time)");
-        System.out.println("\t\t\tDate and time in this format :\tmm/dd/yyyy hh:mm");
+        System.out.println("\t\t\tDate and time in this formate :\tmm/dd/yyyy hh:mm");
 
         System.exit(1);
 
+
+        /*
+        File f = new File("README.txt");
+
+        try {
+            if (!f.exists())
+                f.createNewFile();
+            FileReader fr = new FileReader(f);
+            BufferedReader br = new BufferedReader(fr);
+
+            StringBuffer sb = new StringBuffer();
+            String line = br.readLine();
+
+            while (line != null) {
+                sb.append(line);
+                sb.append("\n");
+                line = br.readLine();
+            }
+
+            System.out.print(sb.toString());
+            System.exit(1);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println(" ** " + e);
+            System.exit(1);
+        }
+        */
     }
 
     /**
      * Print out error message and exit program.
-     * @param message Error message
+     * @param message
      */
     private static void printErrMessageAndExit(String message) {
         System.err.println(message);

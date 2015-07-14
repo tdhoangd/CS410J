@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.omg.CORBA.OBJ_ADAPTER;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import static junit.framework.Assert.assertEquals;
@@ -21,6 +22,29 @@ import static org.junit.Assert.assertTrue;
  */
 public class Project2Test extends InvokeMainTestCase {
 
+    @Test
+    public void testSampleArgument() {
+
+        String[] args = {"-texFile"};
+        ArrayList<String> options = new ArrayList<String>();
+        ArrayList<String> arguments = new ArrayList<String>();
+        String filePath = null;
+
+        for (int i=0; i<args.length; i++) {
+
+            if (args[i].charAt(0) == '-') {
+                options.add(args[i]);
+                if(args[i].equals("-textFile")) {
+                    filePath = args[i+1];
+                    i++;
+                }
+            } else
+                arguments.add(args[i]);
+
+        }
+
+        System.out.println(filePath);
+    }
 
     @Test
     public void testTextDumper() {

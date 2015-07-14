@@ -24,6 +24,7 @@ public class TextParser implements PhoneBillParser {
         AbstractPhoneCall aCall;
         AbstractPhoneBill bill = null;
         BufferedReader br;
+        String message = "Error: File is not in the right format.";
 
         try {
             br = new BufferedReader(new FileReader(file));
@@ -34,6 +35,7 @@ public class TextParser implements PhoneBillParser {
             // Check 1sts line is customer name line or not
 
             currentLine = br.readLine();
+
 
             if (!checkCustomerLine(currentLine)) return null;
             else {
@@ -54,18 +56,18 @@ public class TextParser implements PhoneBillParser {
                  }
              }
 
+            if (br != null)
+                br.close();
+
 
         } catch (FileNotFoundException e) {
             throw new ParserException("File not found");
         } catch (Exception e) {
-
+            System.err.println(message);
+            System.err.println(e.getMessage());
         }
 
         return bill;
-
-
-
-
 
     }
 
