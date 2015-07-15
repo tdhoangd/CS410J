@@ -18,35 +18,45 @@ public class TextDumper implements PhoneBillDumper {
         this.file = file;
     }
 
+    /**
+     *  Dumps a phone bill to some destination.
+     * @param bill a phone bill
+     * @throws IOException
+     */
     @Override
     public void dump(AbstractPhoneBill bill) throws IOException {
 
         AbstractPhoneCall aCall;
 
-        // Check if file exist or not
-        if (!file.exists()) {
-            file.createNewFile();
-        }
+        try {
 
-        FileWriter  fw = new FileWriter(file);
-        BufferedWriter bw = new BufferedWriter(fw);
-
-        if (bill.getCustomer() != null) {
-
-            bw.write("Name: " + bill.getCustomer());
-
-            for (Object object: bill.getPhoneCalls()) {
-                aCall = (AbstractPhoneCall) object;
-
-                bw.newLine();
-                bw.write(aCall.getCaller() + ";" + aCall.getCallee() + ";");
-                bw.write(aCall.getStartTimeString() + ";" + aCall.getEndTimeString());
-
+            // Check if file exist or not
+            if (!file.exists()) {
+                file.createNewFile();
             }
-        }
 
-        bw.close();
-        fw.close();
+            FileWriter  fw = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(fw);
+
+            if (bill.getCustomer() != null) {
+
+                bw.write("Name: " + bill.getCustomer());
+
+                for (Object object: bill.getPhoneCalls()) {
+                    aCall = (AbstractPhoneCall) object;
+
+                    bw.newLine();
+                    bw.write(aCall.getCaller() + ";" + aCall.getCallee() + ";");
+                    bw.write(aCall.getStartTimeString() + ";" + aCall.getEndTimeString());
+
+                }
+            }
+
+            bw.close();
+            fw.close();
+        } catch (IOException e) {
+            throw new IOException(e.getCause());
+        }
 
     }
 }

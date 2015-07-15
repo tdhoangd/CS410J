@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="4" failures="0" name="edu.pdx.cs410J.thhoang.Project2Test" time="0" errors="0" skipped="0">
+<testsuite tests="4" failures="0" name="edu.pdx.cs410J.thhoang.Project2Test" time="0.033" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/jre/lib"/>
@@ -62,8 +62,8 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="edu.pdx.cs410J.thhoang.Project2Test" name="testNoCommandArguments" time="0"/>
-  <testcase classname="edu.pdx.cs410J.thhoang.Project2Test" name="testSampleArgument" time="0"/>
+  <testcase classname="edu.pdx.cs410J.thhoang.Project2Test" name="testNoCommandArguments" time="0.026"/>
+  <testcase classname="edu.pdx.cs410J.thhoang.Project2Test" name="testSampleArgument" time="0.001"/>
   <testcase classname="edu.pdx.cs410J.thhoang.Project2Test" name="testTextDumper" time="0"/>
-  <testcase classname="edu.pdx.cs410J.thhoang.Project2Test" name="testTextParser" time="0"/>
+  <testcase classname="edu.pdx.cs410J.thhoang.Project2Test" name="testTextParser" time="0.006"/>
 </testsuite>

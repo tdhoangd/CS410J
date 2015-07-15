@@ -24,33 +24,33 @@ public class Project2 {
         String endTime = null;
         ArrayList<String> options = new ArrayList<String>();
         ArrayList<String> arguments = new ArrayList<String>();
+        ArrayList<String> inputs = new ArrayList<String>();
         String filePath = null;
-        boolean optTextFile = false;
+        boolean textFileOption = false;
+        boolean printOption = false;
         File file = null;
+
+
 
         if (args.length == 0) {
             printErrMessageAndExit("Missing command line arguments");
         }
 
-        for (int i=0; i<args.length; i++) {
-
-            if (args[i].charAt(0) == '-') {
-                options.add(args[i]);
-                if(args[i].equals("-textFile")) {
-                    optTextFile = true;
-                    if (i < (args.length -1)){
-                        filePath = args[i+1];
-                        i++;
-                    }
-                }
-            } else
-                arguments.add(args[i]);
-
-        }
-
-        for (String opt : options) {
-            if (opt.equals("-README")) {
+        // Existing -README option
+        for (String arg: args) {
+            inputs.add(arg);
+            if (arg.equals("-README")) {
                 printReadMeAndExit();
+            }
+            if (arg.equals("-print")) {
+                printOption = true;
+            }
+            if (arg.equals("-textFile")) {
+                textFileOption = true;
+            }
+
+            if (arg.charAt(0) == '-') {
+                options.add(arg);
             }
         }
 
@@ -71,13 +71,37 @@ public class Project2 {
 
         }
 
-        // check args: -textFile + file path
-        if (optTextFile) {
-            if (filePath == null)
-                printErrMessageAndExit("Error: missing file path");
-            else if (filePath.charAt(0) == '-')
-                printErrMessageAndExit("Error: missing file path");
+        // Get filePath
+        if (inputs.contains("-textFile")) {
+
+            int j = inputs.indexOf("-textFile");
+
+            if ((j+1) == inputs.size()) {
+                printErrMessageAndExit("Missing file path");
+            } else if (j < (inputs.size()-1))  {
+
+                String temp = inputs.get(j+1);
+                if (temp.charAt(0) == '-') {
+                    printErrMessageAndExit("Missing file path");
+                } else {
+                    filePath = temp;
+                }
+
+            }
+
         }
+
+        if (inputs.contains(filePath)) {
+
+            inputs.remove(filePath);
+        }
+
+        for (String s: inputs) {
+
+            if (s.charAt(0) != '-')
+                arguments.add(s);
+        }
+
 
         if (arguments.size() > 7) {
             printErrMessageAndExit("Error: There are extraneous command line arguments ");
@@ -143,34 +167,47 @@ public class Project2 {
         String end = endDate + " " + endTime;
         aCall = new PhoneCall(callerNumber, calleeNumber, start, end);
 
-        for (String opt: options) {
-            if (opt.equals("-print")) {
-                System.out.println("Description of new phone call");
-                System.out.println(aCall.toString());
-            }
-        }
+        // load file to phone bill
+        if (textFileOption && (filePath != null)) {
 
-        if (optTextFile && (filePath != null)) {
+            file = new File(filePath);
 
-            try {
-                TextParser tp = new TextParser(new File(filePath));
-                phonebill = tp.parse();
+            if (!file.exists()) {
 
-                System.out.println("Loading text file");
-                if (!phonebill.getCustomer().equals(customer)){
-                    printErrMessageAndExit("Error: customer given from command line is different that the one in the text file");
+            } else {
+
+                try {
+                    TextParser tp = new TextParser(new File(filePath));
+                    phonebill = tp.parse();
+
+                    System.out.println("Loading text file");
+
+                    if (phonebill == null) {
+                        printErrMessageAndExit("Text file is not the right format");
+                    } else {
+
+                        if (phonebill.getCustomer().equals(customer) == false) {
+                            printErrMessageAndExit("Error: customers are not similar");
+                        }
+                    }
+
+                    System.out.println("Loaded text file");
+
+                } catch (ParserException e) {
+                    System.err.println("Error: cant parse text file to phone bill");
                 }
-                System.out.println("Loaded text file");
-
-            } catch (ParserException e) {
-                System.err.println(e.getMessage());
-                System.err.println("Error: can't parse text file to phone bill.");
             }
 
         }
 
+        // print description of new phone call
+        if (textFileOption) {
+            System.out.println("Description of new phone call");
+            System.out.println(aCall.toString());
+        }
 
-        if (optTextFile && (filePath != null)) {
+        // save phone bill to text file
+        if (textFileOption && (filePath != null)) {
 
             if (phonebill == null) {
                 phonebill = new PhoneBill(customer);
@@ -180,7 +217,9 @@ public class Project2 {
             TextDumper td = new TextDumper(new File(filePath));
 
             try {
+                System.out.println("Saving phone bill to text file");
                 td.dump(phonebill);
+                System.out.println("Successful saved phone bill to text file");
             } catch (IOException e) {
                 System.err.println(e.getMessage());
                 printErrMessageAndExit("Error: cant dump phone bill to text file");

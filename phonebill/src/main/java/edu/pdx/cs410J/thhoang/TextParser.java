@@ -15,10 +15,20 @@ public class TextParser implements PhoneBillParser {
 
     private File file;
 
+    /**
+     * Constructor of TextParser class
+     * @param file file
+     */
     TextParser(File file) {
         this.file = file;
     }
 
+    /**
+     * Dumps a phone bill to some destination.
+     * @return bill or null (if file not found or malformatted
+     * @throws ParserException
+     *      if source can not be parsed.
+     */
     @Override
     public AbstractPhoneBill parse() throws ParserException {
         AbstractPhoneCall aCall;
@@ -36,15 +46,16 @@ public class TextParser implements PhoneBillParser {
 
             currentLine = br.readLine();
 
+            if (!file.exists())
+                return null;
 
             if (!checkCustomerLine(currentLine)) return null;
             else {
                 String name = currentLine.replace("Name: ", "");
                 bill = new PhoneBill(name);
-
             }
 
-             while ((currentLine = br.readLine()) != null) {
+            while ((currentLine = br.readLine()) != null) {
                  if (checkPhoneCallLine(currentLine)) {
 
                      strs = currentLine.split(";");
@@ -54,30 +65,50 @@ public class TextParser implements PhoneBillParser {
                  else {
                      return null;
                  }
-             }
+            }
 
             if (br != null)
                 br.close();
 
 
-        } catch (FileNotFoundException e) {
-            throw new ParserException("File not found");
         } catch (Exception e) {
             System.err.println(message);
-            System.err.println(e.getMessage());
         }
 
         return bill;
-
     }
 
-
-
+    /**
+     *  Check customer line in format <code>"Name :" customerName</code>
+     * @param currentLine string line
+     * @return boolean
+     */
     private boolean checkCustomerLine(String currentLine) {
 
-        return currentLine.contains("Name: ");
+        if (currentLine == null)
+            return false;
+        else if (currentLine.contains("Name: ")) {
+            String s = currentLine;
+
+            s.replace("Name: ", "");
+
+            if (s.trim() != null) {
+                return true;
+            } else {
+                return false;
+            }
+
+
+        } else {
+            return false;
+        }
     }
 
+    /**
+     * Check phone call line
+     * @param currentLine string line
+     * @return boolean
+     */
     private boolean checkPhoneCallLine(String currentLine) {
 
         String[] strings = currentLine.split(";");

@@ -22,6 +22,23 @@ import static org.junit.Assert.assertTrue;
  */
 public class Project2Test extends InvokeMainTestCase {
 
+
+
+    @Test
+    public void testInputArugmentWithtextFileOption() {
+
+        ArrayList<String> inputs = new ArrayList<String>();
+
+        inputs.add("-print");
+        inputs.add("-textFile");
+        inputs.add("Thanh Hoang");
+
+        if (inputs.contains("-textFile")) {
+            System.out.println("contain -textFile");
+        }
+
+    }
+
     @Test
     public void testSampleArgument() {
 
