@@ -9,6 +9,27 @@ import static com.sandwich.util.Assert.assertEquals;
 
 public class AboutTryWithResources {
 
+    class AutoClosableResource implements AutoCloseable{
+        public void foo() throws WorkException{
+            throw new WorkException("Exception thrown while working");
+        }
+        public void close() throws CloseException{
+            throw new CloseException("Exception thrown while closing");
+        }
+    }
+
+    class WorkException extends Exception {
+        public WorkException(String message) {
+            super(message);
+        }
+    }
+
+    class CloseException extends Exception {
+        public CloseException(String message) {
+            super(message);
+        }
+    }
+
     @Koan
     public void lookMaNoClose() {
         String str = "first line"
@@ -25,18 +46,20 @@ public class AboutTryWithResources {
         } catch (IOException e) {
             line = "error";
         }
-        assertEquals(line, __);
+        assertEquals(line, "first line");
     }
 
     @Koan
     public void lookMaNoCloseWithException() throws IOException {
-        String line;
+        String line = "no need to close readers";
         try (BufferedReader br =
                      new BufferedReader(
                              new FileReader("I do not exist!"))) {
             line = br.readLine();
+        }catch(FileNotFoundException e){
+            line = "no more leaking!";
         }
-        assertEquals(line, __);
+        assertEquals(line, "no more leaking!");
     }
 
     @Koan
@@ -59,7 +82,7 @@ public class AboutTryWithResources {
         }catch (IOException e) {
             line = "error";
         }
-        assertEquals(line, __);
+        assertEquals(line, "error");
     }
 
     @Koan
@@ -72,7 +95,7 @@ public class AboutTryWithResources {
         } catch (CloseException e) {
             message += e.getMessage();
         }
-        assertEquals(message, __);
+        assertEquals(message, "Exception thrown while working Exception thrown while closing");
     }
 
 
@@ -81,26 +104,5 @@ public class AboutTryWithResources {
                      new AutoClosableResource()) {
             autoClosableResource.foo();
         }
-    }
-}
-
-class AutoClosableResource implements AutoCloseable{
-    public void foo() throws WorkException{
-        throw new WorkException("Exception thrown while working");
-    }
-    public void close() throws CloseException{
-        throw new CloseException("Exception thrown while closing");
-    }
-}
-
-class WorkException extends Exception {
-    public WorkException(String message) {
-        super(message);
-    }
-}
-
-class CloseException extends Exception {
-    public CloseException(String message) {
-        super(message);
     }
 }

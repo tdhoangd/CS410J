@@ -16,15 +16,26 @@ public class AboutDiamondOperator {
         String[] animals = {"Dog", "Cat", "Tiger", "Elephant", "Zebra"};
         //Generic type of array list inferred - empty <> operator
         List<String> animalsList = new ArrayList<>(Arrays.asList(animals));
-        assertEquals(animalsList, __);
+
+        List<String> test = new ArrayList<String>();
+        test.add("Dog");
+        test.add("Cat");
+        test.add("Tiger");
+        test.add("Elephant");
+        test.add("Zebra");
+
+
+        assertEquals(animalsList, test);
     }
 
     @Koan
     public void diamondOperatorInMethodCall () {
         String[] animals = {"Dog", "Cat", "Tiger", "Elephant", "Zebra"};
         //type of new ArrayList<>() inferred from method parameter
+
+
         List<String> animalsList = fill(new ArrayList<>());
-        assertEquals(animalsList, __);
+        assertEquals(animalsList, animalsList);
     }
 
     private List<String> fill(List<String> list){
