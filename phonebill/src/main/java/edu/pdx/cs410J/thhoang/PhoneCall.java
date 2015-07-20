@@ -2,6 +2,8 @@ package edu.pdx.cs410J.thhoang;
 
 import edu.pdx.cs410J.AbstractPhoneCall;
 
+import java.util.Date;
+
 
 /**
  * This class represents a phone call between a caller (the
@@ -9,7 +11,30 @@ import edu.pdx.cs410J.AbstractPhoneCall;
  * phone number of the person whose receives the phone call).  Phone
  * calls begin and end at given times.
  */
-public class PhoneCall extends AbstractPhoneCall {
+public class PhoneCall extends AbstractPhoneCall implements Comparable {
+
+
+    /**
+     * Returns the time that this phone call was originated as a
+     * {@link Date}.
+     * @return
+     */
+    @Override
+    public Date getStartTime() {
+
+        return null;
+    }
+
+    /**
+     * Returns the time that this phone call was completed as a
+     * {@link Date}.
+     * @return
+     */
+    @Override
+    public Date getEndTime() {
+
+        return null;
+    }
 
     /**
      * Create a new <code>PhoneCall</code>
@@ -31,7 +56,6 @@ public class PhoneCall extends AbstractPhoneCall {
         this.endTimeString = endTimeString;
 
     }
-
 
     /**
      * Returns the phone number of the person who originated this phone
@@ -79,4 +103,8 @@ public class PhoneCall extends AbstractPhoneCall {
     private String startTimeString;
     private String endTimeString;
 
+    @Override
+    public int compareTo(Object o) {
+        return 0;
+    }
 }
