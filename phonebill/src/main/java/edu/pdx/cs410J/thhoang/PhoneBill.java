@@ -6,6 +6,7 @@ import edu.pdx.cs410J.AbstractPhoneCall;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -16,6 +17,9 @@ import java.util.List;
  * @author Thanh Hoang
  */
 public class PhoneBill extends AbstractPhoneBill {
+
+    private final String customerName;
+    private final List<AbstractPhoneCall> collection = new ArrayList<AbstractPhoneCall>();
 
     /**
      * Constructor of PhoneBill class
@@ -54,8 +58,26 @@ public class PhoneBill extends AbstractPhoneBill {
         return collection;
     }
 
+    /**
+     * Return a sorted phone call list
+     * @return arraylist of phone call
+     */
+    public Collection getSortedPhoneCalls() {
 
-    private final String customerName;
-    private final List<AbstractPhoneCall> collection = new ArrayList<AbstractPhoneCall>();
+        ArrayList<PhoneCall> aList = new ArrayList<PhoneCall>();
+        PhoneCall aCall = null;
+
+        for (AbstractPhoneCall a : collection) {
+
+            aCall = (PhoneCall) a;
+            aList.add(aCall);
+        }
+
+        Collections.sort(aList);
+
+        return aList;
+    }
+
+
 
 }

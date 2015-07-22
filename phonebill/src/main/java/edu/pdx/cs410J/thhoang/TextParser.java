@@ -6,6 +6,10 @@ import edu.pdx.cs410J.ParserException;
 import edu.pdx.cs410J.PhoneBillParser;
 
 import java.io.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Class that reads the contents of a text file and from it
@@ -35,6 +39,9 @@ public class TextParser implements PhoneBillParser {
         AbstractPhoneBill bill = null;
         BufferedReader br;
         String message = "Error: File is not in the right format.";
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+        Date start = null;
+        Date end = null;
 
         try {
             br = new BufferedReader(new FileReader(file));
@@ -59,7 +66,15 @@ public class TextParser implements PhoneBillParser {
                 if (checkPhoneCallLine(currentLine)) {
 
                     strs = currentLine.split(";");
-                    aCall = new PhoneCall(strs[0], strs[1], strs[2], strs[3]);
+
+                    try {
+                        start = df.parse(strs[2]);
+                        end = df.parse(strs[3]);
+                    } catch (ParseException e) {
+                        return bill;
+                    }
+
+                    aCall = new PhoneCall(strs[0], strs[1], start, end);
                     bill.addPhoneCall(aCall);
                 }
                 else {
@@ -130,10 +145,23 @@ public class TextParser implements PhoneBillParser {
         String[] strings = time.split(" ");
 
         try {
-            return strings.length == 2 && (checkDateFormat(strings[0]) && checkTimeFormat(strings[1]));
+            return strings.length == 3 && (checkDateFormat(strings[0]) && checkTimeFormat(strings[1]) && checkAmPm(strings[2]));
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     *
+     * @param a am/pm
+     * @return boolean
+     */
+    private  boolean checkAmPm(String a) {
+
+        if (a.toLowerCase().equals("am") || a.toLowerCase().equals("pm"))
+            return true;
+        else
+            return false;
     }
 
     /**
