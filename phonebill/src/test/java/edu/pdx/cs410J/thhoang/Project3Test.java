@@ -24,6 +24,18 @@ public class Project3Test extends InvokeMainTestCase {
 
 
     @Test
+    public void testTumlum() {
+
+
+        Object o1 = new Integer(1);
+        Object o2 = o1;
+
+        if (o1 != o2) {
+            System.out.println("diff");
+        }
+    }
+
+    @Test
     public void testPrettyPrinter(){
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
         Date start1 = null;
@@ -73,7 +85,6 @@ public class Project3Test extends InvokeMainTestCase {
         } catch (IOException e) {
             System.out.println("Error");
         }
-
 
 
 
