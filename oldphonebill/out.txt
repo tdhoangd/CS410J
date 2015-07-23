@@ -1,0 +1,5 @@
+		Thanh Hoang's PHONE BILL
+
+No:  Start Time           End Time             Caller          Callee          Duration    
+---- -------------------  -------------------  -----------     -----------      -(minutes)-
+1    02/03/2015 02:30 PM  02/03/2015 04:20 PM  111-222-1111    222-333-2222             110
