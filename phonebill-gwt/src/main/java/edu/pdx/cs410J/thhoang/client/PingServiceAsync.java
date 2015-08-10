@@ -8,8 +8,8 @@ import edu.pdx.cs410J.AbstractPhoneBill;
  */
 public interface PingServiceAsync {
 
-  /**
-   * Return the current date/time on the server
-   */
-  void ping(AsyncCallback<AbstractPhoneBill> async);
+    /**
+     * Return the current date/time on the server
+     */
+    void ping(AsyncCallback<AbstractPhoneBill> async);
 }
