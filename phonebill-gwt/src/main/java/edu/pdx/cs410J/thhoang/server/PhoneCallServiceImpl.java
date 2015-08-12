@@ -6,9 +6,8 @@ import edu.pdx.cs410J.thhoang.client.PhoneBill;
 import edu.pdx.cs410J.thhoang.client.PhoneCall;
 import edu.pdx.cs410J.thhoang.client.PhoneCallService;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import javax.lang.model.type.ArrayType;
+import java.util.*;
 
 /**
  * Created by thanhhoang on 8/5/15.
@@ -38,13 +37,24 @@ public class PhoneCallServiceImpl extends RemoteServiceServlet implements PhoneC
     @Override
     public AbstractPhoneBill search(String name, Date startTime, Date endTime) {
 
-        PhoneBill bill = null;
+        PhoneBill phoneBill = null;
 
-        if (this.phoneBillMap.get(name) == null) {
-            return null;
+        if (this.phoneBillMap.get(name) != null) {
+            phoneBill = this.phoneBillMap.get(name);
         }
 
-        return this.phoneBillMap.get(name);
+        return phoneBill;
+    }
+
+    @Override
+    public AbstractPhoneBill getPhoneBill(String name) {
+        PhoneBill bill = null;
+
+        if (this.phoneBillMap.get(name) != null) {
+            bill = this.phoneBillMap.get(name);
+        }
+
+        return bill;
     }
 
     /**

@@ -14,6 +14,7 @@ import edu.pdx.cs410J.AbstractPhoneBill;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 /**
@@ -21,35 +22,151 @@ import java.util.Date;
  */
 public class PhoneBillGwt implements EntryPoint {
 
-    private FlexTable flexTable = null;
+    private FlexTable flexTable = new FlexTable();
+    private PhoneCallServiceAsync service;
+    // add phone call fields
+    private TextBox callerTextBox;
+    private TextBox customerTextBox;
+    private TextBox calleeTextBox;
+    private TextBox startTimeTextBox;
+    private TextBox endTimeTextBox;
+    private DateBox startDateBox;
+    private DateBox endDateBox;
+    private TextBox searchNameBox;
+    private TextBox searchStartTimeBox;
+    private TextBox searchEndTimeBox;
+    private DateBox searchStartDateBox;
+    private DateBox searchEndDateBox;
+
+    private Label label;
+    //search fields
 
     @Override
     public void onModuleLoad() {
 
-        //centerPanel
-        final VerticalPanel centerPanel = new VerticalPanel();
-        centerPanel.add(new Label("centerPanel"));
+        this.service = GWT.create(PhoneCallService.class);
 
-        // fields of left side of the screen, add panel
+        // create inner panels
+        VerticalPanel leftPanel = createLeftPanel();
+        VerticalPanel rightPanel = createRightPanel();
+        HorizontalPanel topPanel = createTopPanel();
+        VerticalPanel centerPanel = createCenterPanel();
+
+        //centerPanel.add(new Label("center panel"));
+
+        // Interface
+        RootPanel rootPanel = RootPanel.get();
+
+ /*       FlexTable table = new FlexTable();
+        table.setWidth("100%");
+        table.setWidget(0, 0, leftPanel);
+        table.setWidget(0, 1, centerPanel);
+        table.setWidget(0, 2, rightPanel);
+*/
+        DockPanel dockPanel = new DockPanel();
+        dockPanel.setWidth("100%");
+        dockPanel.add(topPanel, DockPanel.NORTH);
+        dockPanel.add(leftPanel, DockPanel.WEST);
+        dockPanel.setCellHorizontalAlignment(leftPanel, HasHorizontalAlignment.ALIGN_LEFT);
+        dockPanel.add(rightPanel, DockPanel.EAST);
+        dockPanel.setCellHorizontalAlignment(rightPanel, HasHorizontalAlignment.ALIGN_RIGHT);
+        dockPanel.add(centerPanel, DockPanel.CENTER);
+        dockPanel.setCellHorizontalAlignment(centerPanel, HasHorizontalAlignment.ALIGN_CENTER);
+
+        rootPanel.add(dockPanel);
+    }
+
+    private VerticalPanel createCenterPanel() {
+
+        //flexTable.setVisible(true);
+        VerticalPanel centerPanel = new VerticalPanel();
+        centerPanel.setBorderWidth(2);
+       // centerPanel.setWidth("70%");
+
+
+        Label welcomeLabel = new Label("WELCOME TO PHONE BILL APPLICATION");
+        centerPanel.add(welcomeLabel);
+
+        centerPanel.add(flexTable);
+
+
+        return centerPanel;
+    }
+
+    private HorizontalPanel createTopPanel() {
+
+        Button helpButton = new Button("Help");
+        helpButton.setPixelSize(150, 33);
+
+        helpButton.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                Window.alert(getREADME());
+            }
+        });
+
+        HorizontalPanel topPanel = new HorizontalPanel();
+        topPanel.setBorderWidth(1);
+        topPanel.setWidth("100%");
+        topPanel.add(helpButton);
+        topPanel.setCellHorizontalAlignment(helpButton, HasHorizontalAlignment.ALIGN_RIGHT);
+        return topPanel;
+    }
+
+    private VerticalPanel createRightPanel() {
+        VerticalPanel rightPanel = new VerticalPanel();
+        rightPanel.setBorderWidth(1);
+
+        searchNameBox = getTextBox("enter name here");
+        searchStartTimeBox = getTextBox("hh:mm a");
+        searchEndTimeBox = getTextBox("hh:mm a");
+        searchStartDateBox = getDateBox();
+        searchEndDateBox = getDateBox();
+
+        Button searchButton = new Button("SEARCH");
+        searchButton.setPixelSize(150, 33);
+        searchButton.addClickHandler(searchHandler());
+
+        Label searchLabel = new Label("SEARCH CALL");
+        searchLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
+        searchLabel.setPixelSize(150, 25);
+        rightPanel.add(searchLabel);
+        rightPanel.add(new Label("Name: "));
+        rightPanel.add(searchNameBox);
+        rightPanel.add(new Label("Start Date:   "));
+        rightPanel.add(searchStartDateBox);
+        rightPanel.add(new Label("Start Time: "));
+        rightPanel.add(searchStartTimeBox);
+        rightPanel.add(new Label("End Date: "));
+        rightPanel.add(searchEndDateBox);
+        rightPanel.add(new Label("End Time"));
+        rightPanel.add(searchEndTimeBox);
+        rightPanel.add(searchButton);
+
+        return rightPanel;
+    }
+
+
+    private VerticalPanel createLeftPanel() {
         VerticalPanel leftPanel = new VerticalPanel();
         leftPanel.setBorderWidth(1);
 
-        final TextBox customerTextBox = getTextBox("enter name here");
-        final TextBox callerTextBox = getTextBox("nnn-nnn-nnnn");
-        final TextBox calleeTextBox = getTextBox("nnn-nnn-nnnn");
-        final TextBox startTimeTextBox = getTextBox("hh:mm a");
-        final TextBox endTimeTextBox = getTextBox("hh:mm a");
-        final DateBox startDateBox = getDateBox();
-        final DateBox endDateBox = getDateBox();
+        customerTextBox = getTextBox("enter name here");
+        callerTextBox = getTextBox("nnn-nnn-nnnn");
+        calleeTextBox = getTextBox("nnn-nnn-nnnn");
+        startTimeTextBox = getTextBox("hh:mm a");
+        endTimeTextBox = getTextBox("hh:mm a");
+        startDateBox = getDateBox();
+        endDateBox = getDateBox();
 
         Button addButton = new Button("ADD");
         addButton.setPixelSize(150, 33);
+        addButton.addClickHandler(addNewPhoneCallHandler());
 
         Label addLabel = new Label("ADD NEW PHONE CALL");
         addLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
         addLabel.setWordWrap(true);
         addLabel.setPixelSize(150, 25);
-
         leftPanel.add(addLabel);
         leftPanel.add(new Label("Customer:   "));
         leftPanel.add(customerTextBox);
@@ -68,69 +185,128 @@ public class PhoneBillGwt implements EntryPoint {
         leftPanel.add(addButton);
 
 
-        // right side
-        VerticalPanel rightPanel = new VerticalPanel();
-        rightPanel.setBorderWidth(1);
+        return leftPanel;
+    }
 
-        Button helpButton = new Button("ReadMe");
-        helpButton.setPixelSize(150, 33);
+    private ClickHandler searchHandler() {
 
-        Label searchLabel = new Label("SEARCH CALL");
-        searchLabel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-        searchLabel.setPixelSize(150, 25);
-
-        final TextBox searchNameBox = getTextBox("enter name here");
-        final TextBox searchStartTimeBox = getTextBox("hh:mm a");
-        final TextBox searchEndTimeBox = getTextBox("hh:mm a");
-        final DateBox searchStartDateBox = getDateBox();
-        final DateBox searchEndDateBox = getDateBox();
-
-        Button searchButton = new Button("SEARCH");
-        searchButton.setPixelSize(150, 33);
-
-        rightPanel.add(searchLabel);
-        rightPanel.add(new Label("Name: "));
-        rightPanel.add(searchNameBox);
-        rightPanel.add(new Label("Start Date:   "));
-        rightPanel.add(searchStartDateBox);
-        rightPanel.add(new Label("Start Time: "));
-        rightPanel.add(searchStartTimeBox);
-        rightPanel.add(new Label("End Date: "));
-        rightPanel.add(searchEndDateBox);
-        rightPanel.add(new Label("End Time"));
-        rightPanel.add(searchEndTimeBox);
-        rightPanel.add(searchButton);
-
-
-        // top panel
-        HorizontalPanel topPanel = new HorizontalPanel();
-        topPanel.setWidth("100%");
-        topPanel.add(helpButton);
-        topPanel.setCellHorizontalAlignment(helpButton, HasHorizontalAlignment.ALIGN_RIGHT);
-
-
-
-        // Click handler
-        helpButton.addClickHandler(new ClickHandler() {
+        return new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                Window.alert(getREADME());
+
+                String customer = searchNameBox.getText();
+                String startDate = searchStartDateBox.getTextBox().getText();
+                String startTime = searchStartTimeBox.getText();
+                String endDate = searchEndDateBox.getTextBox().getText();
+                String endTime = searchEndTimeBox.getText();
+                String startDateTimeString = startDate + " " + startTime;
+                String endDateTimeString = endDate + " " + endTime;
+
+                try {
+                    missingSearchArguments(customer, startDate, startTime, endDate, endTime);
+                } catch (IOException e) {
+                    Window.alert(e.toString());
+                    return;
+                }
+
+                ArrayList<PhoneCall> callList = new ArrayList<PhoneCall>();
+                Date startDateTime = null;
+                Date endDateTime = null;
+
+                if (!startDate.isEmpty() && !startTime.isEmpty()) {
+                    try {
+                        startDateTime = checkDateAndTimeFormat(startDateTimeString);
+                    } catch (ParseException e) {
+                        Window.alert("Malformed:\n" + e.toString());
+                        return;
+                    }
+                }
+
+                if (!endDate.isEmpty() && !endTime.isEmpty()){
+
+                    try {
+                        endDateTime = checkDateAndTimeFormat(endDateTimeString);
+                    } catch (ParseException e) {
+                        Window.alert("Malformed\n" + e.toString());
+                        return;
+                    }
+                }
+
+                if (startDateTime != null && endDateTime != null) {
+                    service.search(customer, startDateTime, endDateTime, prettyPrintSearch(startDateTime, endDateTime));
+                }
+
+                if (startDateTime == null && endDateTime == null) {
+                    service.search(customer, startDateTime, endDateTime, prettyPrintSearchPhoneBill());
+                }
+
             }
-        });
 
-        addButton.addClickHandler(new ClickHandler() {
+            private AsyncCallback<AbstractPhoneBill> prettyPrintSearch(final Date startDateTime, final Date endDateTime) {
+                return new AsyncCallback<AbstractPhoneBill>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        Window.alert(throwable.toString());
+                    }
+
+                    @Override
+                    public void onSuccess(AbstractPhoneBill abstractPhoneBill) {
+                        ArrayList<PhoneCall> callsList = new ArrayList<PhoneCall>();
+                        PhoneBill bill = (PhoneBill) abstractPhoneBill;
+                        callsList = (ArrayList) bill.searchPhoneCalls(startDateTime, endDateTime);
+
+                        Window.alert("Found " + Integer.toString(callsList.size()));
+                        updateTable(callsList);
+                    }
+                };
+            }
+
+            private AsyncCallback<AbstractPhoneBill> prettyPrintSearchPhoneBill() {
+                return new AsyncCallback<AbstractPhoneBill>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        Window.alert(throwable.toString());
+                    }
+
+                    @Override
+                    public void onSuccess(AbstractPhoneBill abstractPhoneBill) {
+
+                        Window.alert("Found " + Integer.toString(abstractPhoneBill.getPhoneCalls().size()));
+
+                        updateTable((ArrayList) abstractPhoneBill.getPhoneCalls());
+                    }
+                };
+            }
+
+
+        };
+
+    }
+
+    private ClickHandler addNewPhoneCallHandler() {
+
+        return new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
+
                 String customer = customerTextBox.getText();
                 String caller = callerTextBox.getText();
                 String callee = calleeTextBox.getText();
                 String startTimeString = startDateBox.getTextBox().getText() + " " + startTimeTextBox.getText();
                 String endTimeString = endDateBox.getTextBox().getText() + " " + endTimeTextBox.getText();
 
+                customerTextBox.setText(null);
+                callerTextBox.setText(null);
+                calleeTextBox.setText(null);
+                startDateBox.getTextBox().setText(null);
+                endDateBox.getTextBox().setText(null);
+                startTimeTextBox.setText(null);
+                endTimeTextBox.setText(null);
+
                 try {
                     missingAddArguments(customer, caller, callee, startTimeString, endTimeString);
                 } catch (IOException e) {
-                    Window.alert(e.toString() + "\nClose this window and re-enter missing fileds please!");
+                    Window.alert(e.toString() + "\nClose this window and re-enter missing fields please!");
                     return;
                 }
 
@@ -167,9 +343,12 @@ public class PhoneBillGwt implements EntryPoint {
 
                 final PhoneCall call = new PhoneCall(caller, callee, startDateTime, endDateTime);
 
-                PhoneCallServiceAsync async = GWT.create(PhoneCallService.class);
-                async.add(customer, call, new AsyncCallback<AbstractPhoneBill>() {
+                service.add(customer, call, prettyPrintPhoneCalls());
 
+            }
+
+            private AsyncCallback<AbstractPhoneBill> prettyPrintPhoneCalls() {
+                return new AsyncCallback<AbstractPhoneBill>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                         Window.alert(throwable.toString());
@@ -178,188 +357,27 @@ public class PhoneBillGwt implements EntryPoint {
                     @Override
                     public void onSuccess(AbstractPhoneBill abstractPhoneBill) {
 
-                    //    flexTable = initHeadTable();
-                        
-                        updateTable(abstractPhoneBill);
-
-                        Window.alert("came here\n" + abstractPhoneBill.toString());
-
-                       // PhoneCall call1 = null;
-                        /*centerPanel.clear();
-                        centerPanel.add(new Label("New phone call added: \n\t\t" + call1.toString() + "\n"));
-
-                        int i = 1;
-                        flexTable.removeAllRows();
-
-                        flexTable.setText(0, 0, "NO:");
-                        flexTable.setText(0, 1, "START TIME");
-                        flexTable.setText(0, 2, "END TIME");
-                        flexTable.setText(0, 3, "CALLER NUMBER");
-                        flexTable.setText(0, 4, "CALLEE NUMBER");
-                        flexTable.setText(0, 5, "DURATION");
-
-                        for (Object o : abstractPhoneBill.getPhoneCalls()) {
-                            call1 = (PhoneCall) o;
-
-                            flexTable.setText(i, 0, Integer.toString(i));
-                            flexTable.setText(i, 1, call1.getStartTimeString());
-                            flexTable.setText(i, 2, call1.getEndTimeString());
-                            flexTable.setText(i, 3, call1.getCaller());
-                            flexTable.setText(i, 4, call1.getCallee());
-                            flexTable.setText(i, 5, Integer.toString(call1.timeDifference()));
-                        }
-
-                        centerPanel.add(flexTable);
-
-
-                        StringBuilder sb = new StringBuilder( abstractPhoneBill.toString() );
-                        sb.append(call.toString());
-                        Collection<AbstractPhoneCall> calls = abstractPhoneBill.getPhoneCalls();
-                        for ( AbstractPhoneCall a : calls ) {
-                            sb.append(a);
-                            sb.append("\n");
-                        }
-                        Window.alert( sb.toString() );*/
-
+                        updateTable((ArrayList) abstractPhoneBill.getPhoneCalls());
                     }
-                });
-
+                };
             }
-        });
-
-
-        searchButton.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent clickEvent) {
-
-                String customer = searchNameBox.getText();
-                String startDateTimeString = searchStartDateBox.getTextBox().getText() + " " + searchStartTimeBox.getText();
-                String endDateTimeString = searchEndDateBox.getTextBox().getText() + " " + searchEndTimeBox.getText();
-
-                try {
-                    missingSearchArguments(customer, startDateTimeString, endDateTimeString);
-                } catch (IOException e) {
-                    Window.alert(e.toString());
-                    return;
-                }
-
-                
-                ArrayList<PhoneCall> callList = new ArrayList<PhoneCall>();
-                Date startDateTime = null;
-                Date endDateTime = null;
-
-                try {
-                    startDateTime = checkDateAndTimeFormat(startDateTimeString);
-                } catch (ParseException e) {
-                    Window.alert("Malformed:\n" + e.toString());
-                    return;
-                }
-
-                try {
-                    endDateTime = checkDateAndTimeFormat(endDateTimeString);
-                } catch (ParseException e) {
-                    Window.alert("Malformed\n" + e.toString());
-                    return;
-                }
-
-                PhoneCallServiceAsync async = GWT.create(PhoneCallService.class);
-                async.search(customer, startDateTime, endDateTime, new AsyncCallback<AbstractPhoneBill>() {
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        Window.alert(throwable.toString());
-                    }
-
-                    @Override
-                    public void onSuccess(AbstractPhoneBill abstractPhoneBill) {
-
-                    }
-                });
-
-
-
-            }
-        });
-
-
-
-
-       /* button.addClickHandler(new ClickHandler() {
-            public void onClick( ClickEvent clickEvent )
-            {
-                PingServiceAsync async = GWT.create( PingService.class );
-
-                async.ping( new AsyncCallback<AbstractPhoneBill>() {
-
-                    public void onFailure( Throwable ex )
-                    {
-                        Window.alert(ex.toString());
-                    }
-
-                    public void onSuccess( AbstractPhoneBill phonebill )
-                    {
-                        StringBuilder sb = new StringBuilder( phonebill.toString() );
-                        Collection<AbstractPhoneCall> calls = phonebill.getPhoneCalls();
-                        for ( AbstractPhoneCall call : calls ) {
-                            sb.append(call);
-                            sb.append("\n");
-                        }
-                        Window.alert( sb.toString() );
-                    }
-                });
-            }
-        });*/
-
-        // Center
-
-/*
-        FlexTable flexTable = new FlexTable();
-        flexTable.setText(0, 0, "No");
-        flexTable.setText(0, 1, "Start Time");
-        flexTable.setText(0, 2, "End Time");
-        flexTable.setText(0, 3, "Caller");
-        flexTable.setText(0, 4, "Callee");
-        flexTable.setText(0, 5, "Duration");
-        flexTable.setBorderWidth(1);
-        flexTable.getColumnFormatter().setWidth(0, "400px");
-
-        flexTable.setText(1, 0, "No");
-        flexTable.setText(1, 1, "Start Time");
-        flexTable.setText(1, 2, "End Time");
-        flexTable.setText(1, 3, "Caller");
-        flexTable.setText(1, 4, "Callee");
-        flexTable.setText(1, 5, "Duration");
-
-        centerPanel.add(flexTable);*/
-
-        flexTable = initHeadTable();
-
-        centerPanel.add(new Label("Phone call list"));
-        centerPanel.add(flexTable);
-
-        RootPanel rootPanel = RootPanel.get();
-
-        DockPanel dockPanel = new DockPanel();
-        dockPanel.setWidth("100%");
-        dockPanel.add(topPanel, DockPanel.NORTH);
-        dockPanel.add(leftPanel, DockPanel.WEST);
-        dockPanel.setCellHorizontalAlignment(leftPanel, HasHorizontalAlignment.ALIGN_LEFT);
-        dockPanel.add(rightPanel, DockPanel.EAST);
-        dockPanel.setCellHorizontalAlignment(rightPanel, HasHorizontalAlignment.ALIGN_RIGHT);
-
-        dockPanel.add(centerPanel, DockPanel.CENTER);
-
-        rootPanel.add(dockPanel);
-
-
+        };
     }
 
-    private void updateTable(AbstractPhoneBill abstractPhoneBill) {
+    private void updateTable(ArrayList phoneCalls) {
         flexTable.removeAllRows();
-        flexTable = initHeadTable();
+        initHeadTable();
+
         PhoneCall phoneCall = null;
         int i = 1;
 
-        for (Object o : abstractPhoneBill.getPhoneCalls()) {
+        if (phoneCalls.size() == 0) {
+            initHeadTable();
+            return;
+        }
+
+
+        for (Object o : phoneCalls) {
             phoneCall = (PhoneCall) o;
 
             flexTable.setText(i, 0, Integer.toString(i));
@@ -414,23 +432,42 @@ public class PhoneBillGwt implements EntryPoint {
 
     }
 
-    private void missingSearchArguments(String name, String start, String end) throws IOException {
+    private void missingSearchArguments(String name, String startDate, String startTime, String endDate, String endTime) throws IOException {
 
         boolean isMissing = false;
+        String fields = " ";
 
-        if (name.isEmpty()) isMissing = true;
+        if (name.isEmpty()) {
+            isMissing = true;
+            fields += " customer name; ";
+        }
         if (!name.isEmpty()) {
 
-            if (start.isEmpty() && !end.isEmpty()) {
-                isMissing = true;
-            }
-            if (!start.isEmpty() && end.isEmpty()) {
-                isMissing = true;
+            String start = startDate + startTime;
+            String end = endDate + endTime;
+
+            if (!start.isEmpty() && !end.isEmpty()) {
+                if (startDate.isEmpty()) {
+                    isMissing = true;
+                    fields += " start date;";
+                }
+                if (startTime.isEmpty()) {
+                    isMissing = true;
+                    fields += " start time;";
+                }
+                if (endDate.isEmpty()) {
+                    isMissing = true;
+                    fields += " end date;";
+                }
+                if (endTime.isEmpty()) {
+                    isMissing = true;
+                    fields += " end time;";
+                }
             }
         }
 
         if (isMissing) {
-            throw new IOException("Missing Fields");
+            throw new IOException("Missing Fields\n" + fields);
         }
 
     }
@@ -456,16 +493,23 @@ public class PhoneBillGwt implements EntryPoint {
         return dateTime;
     }
 
-    private FlexTable initHeadTable() {
-        FlexTable table = new FlexTable();
+    private void  initHeadTable() {
 
-        table.setText(0, 0, "NO:");
-        table.setText(0, 1, "START TIME");
-        table.setText(0, 2, "END TIME");
-        table.setText(0, 3, "CALLER NUMBER");
-        table.setText(0, 4, "CALLEE NUMBER");
-        table.setText(0, 5, "DURATION");
+        if (flexTable.getRowCount() != 0)
+            flexTable.removeAllRows();
 
-        return table;
+        flexTable.setWidth("900px");
+
+        flexTable.setText(0, 0, "NO:");
+        flexTable.setText(0, 1, "START TIME");
+        flexTable.setText(0, 2, "END TIME");
+        flexTable.setText(0, 3, "CALLER NUMBER");
+        flexTable.setText(0, 4, "CALLEE NUMBER");
+        flexTable.setText(0, 5, "DURATION");
+
+    }
+
+    private void getLabel(String s) {
+        label = new Label(s);
     }
 }
