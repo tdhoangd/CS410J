@@ -16,6 +16,12 @@ public class PhoneCallServiceImpl extends RemoteServiceServlet implements PhoneC
 
     Map<String, PhoneBill> phoneBillMap = new HashMap<String, PhoneBill>();
 
+    /**
+     *
+     * @param name
+     * @param call
+     * @return
+     */
     @Override
     public AbstractPhoneBill add(String name, PhoneCall call) {
 
@@ -34,6 +40,13 @@ public class PhoneCallServiceImpl extends RemoteServiceServlet implements PhoneC
         return bill;
     }
 
+    /**
+     *
+     * @param name
+     * @param startTime
+     * @param endTime
+     * @return
+     */
     @Override
     public AbstractPhoneBill search(String name, Date startTime, Date endTime) {
 
@@ -46,6 +59,11 @@ public class PhoneCallServiceImpl extends RemoteServiceServlet implements PhoneC
         return phoneBill;
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     @Override
     public AbstractPhoneBill getPhoneBill(String name) {
         PhoneBill bill = null;

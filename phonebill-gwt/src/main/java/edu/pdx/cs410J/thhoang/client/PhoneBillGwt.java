@@ -38,7 +38,7 @@ public class PhoneBillGwt implements EntryPoint {
     private DateBox searchStartDateBox;
     private DateBox searchEndDateBox;
 
-    private Label label;
+    private Label label = new Label();
     //search fields
 
     @Override
@@ -76,6 +76,10 @@ public class PhoneBillGwt implements EntryPoint {
         rootPanel.add(dockPanel);
     }
 
+    /**
+     *
+     * @return
+     */
     private VerticalPanel createCenterPanel() {
 
         //flexTable.setVisible(true);
@@ -85,7 +89,9 @@ public class PhoneBillGwt implements EntryPoint {
 
 
         Label welcomeLabel = new Label("WELCOME TO PHONE BILL APPLICATION");
-        centerPanel.add(welcomeLabel);
+       // centerPanel.add(welcomeLabel);
+
+        centerPanel.add(label);
 
         centerPanel.add(flexTable);
 
@@ -93,6 +99,10 @@ public class PhoneBillGwt implements EntryPoint {
         return centerPanel;
     }
 
+    /**
+     *
+     * @return
+     */
     private HorizontalPanel createTopPanel() {
 
         Button helpButton = new Button("Help");
@@ -113,6 +123,10 @@ public class PhoneBillGwt implements EntryPoint {
         return topPanel;
     }
 
+    /**
+     *
+     * @return
+     */
     private VerticalPanel createRightPanel() {
         VerticalPanel rightPanel = new VerticalPanel();
         rightPanel.setBorderWidth(1);
@@ -146,7 +160,10 @@ public class PhoneBillGwt implements EntryPoint {
         return rightPanel;
     }
 
-
+    /**
+     *
+     * @return
+     */
     private VerticalPanel createLeftPanel() {
         VerticalPanel leftPanel = new VerticalPanel();
         leftPanel.setBorderWidth(1);
@@ -188,6 +205,10 @@ public class PhoneBillGwt implements EntryPoint {
         return leftPanel;
     }
 
+    /**
+     *
+     * @return
+     */
     private ClickHandler searchHandler() {
 
         return new ClickHandler() {
@@ -256,7 +277,7 @@ public class PhoneBillGwt implements EntryPoint {
                         callsList = (ArrayList) bill.searchPhoneCalls(startDateTime, endDateTime);
 
                         Window.alert("Found " + Integer.toString(callsList.size()));
-                        updateTable(callsList);
+                        updateTable(callsList, bill.getCustomer());
                     }
                 };
             }
@@ -273,7 +294,7 @@ public class PhoneBillGwt implements EntryPoint {
 
                         Window.alert("Found " + Integer.toString(abstractPhoneBill.getPhoneCalls().size()));
 
-                        updateTable((ArrayList) abstractPhoneBill.getPhoneCalls());
+                        updateTable((ArrayList) abstractPhoneBill.getPhoneCalls(), abstractPhoneBill.getCustomer());
                     }
                 };
             }
@@ -283,6 +304,10 @@ public class PhoneBillGwt implements EntryPoint {
 
     }
 
+    /**
+     *
+     * @return
+     */
     private ClickHandler addNewPhoneCallHandler() {
 
         return new ClickHandler() {
@@ -357,30 +382,39 @@ public class PhoneBillGwt implements EntryPoint {
                     @Override
                     public void onSuccess(AbstractPhoneBill abstractPhoneBill) {
 
-                        updateTable((ArrayList) abstractPhoneBill.getPhoneCalls());
+
+                        updateTable((ArrayList) abstractPhoneBill.getPhoneCalls(), abstractPhoneBill.getCustomer());
                     }
                 };
             }
         };
     }
 
-    private void updateTable(ArrayList phoneCalls) {
+    /**
+     *
+     * @param phoneCalls
+     */
+    private void updateTable(ArrayList phoneCalls, String name) {
         flexTable.removeAllRows();
         initHeadTable();
 
         PhoneCall phoneCall = null;
-        int i = 1;
+        int i = 2;
 
         if (phoneCalls.size() == 0) {
             initHeadTable();
             return;
         }
 
+        flexTable.setText(0, 1, name + "'s Phone Bill");
+        flexTable.setBorderWidth(1);
+        flexTable.setCellPadding(7);
+
 
         for (Object o : phoneCalls) {
             phoneCall = (PhoneCall) o;
 
-            flexTable.setText(i, 0, Integer.toString(i));
+            flexTable.setText(i, 0, Integer.toString(i-1));
             flexTable.setText(i, 1, phoneCall.getStartTimeString());
             flexTable.setText(i, 2, phoneCall.getEndTimeString());
             flexTable.setText(i, 3, phoneCall.getCaller());
@@ -391,6 +425,10 @@ public class PhoneBillGwt implements EntryPoint {
 
     }
 
+    /**
+     *
+     * @return
+     */
     private DateBox getDateBox() {
         final DateBox dateBox = new DateBox();
         DateTimeFormat df = DateTimeFormat.getFormat("MM/dd/yyyy");
@@ -401,6 +439,11 @@ public class PhoneBillGwt implements EntryPoint {
     }
 
 
+    /**
+     *
+     * @param placeholder
+     * @return
+     */
     private TextBox getTextBox(String placeholder) {
         TextBox textBox = new TextBox();
         textBox.getElement().setAttribute("placeholder", placeholder);
@@ -408,6 +451,10 @@ public class PhoneBillGwt implements EntryPoint {
         return textBox;
     }
 
+    /**
+     *
+     * @return string text
+     */
     private String getREADME() {
         String text = "Phone Bill application:\n" +
                 "This application will store phone calls and phone bills.\n" +
@@ -416,6 +463,15 @@ public class PhoneBillGwt implements EntryPoint {
         return text;
     }
 
+    /**
+     *
+     * @param name
+     * @param caller
+     * @param callee
+     * @param start
+     * @param end
+     * @throws IOException
+     */
     private void missingAddArguments(String name, String caller, String callee, String start, String end) throws IOException {
 
         boolean flag = false;
@@ -432,6 +488,15 @@ public class PhoneBillGwt implements EntryPoint {
 
     }
 
+    /**
+     *
+     * @param name
+     * @param startDate
+     * @param startTime
+     * @param endDate
+     * @param endTime
+     * @throws IOException
+     */
     private void missingSearchArguments(String name, String startDate, String startTime, String endDate, String endTime) throws IOException {
 
         boolean isMissing = false;
@@ -472,6 +537,11 @@ public class PhoneBillGwt implements EntryPoint {
 
     }
 
+    /**
+     *
+     * @param phoneNo
+     * @throws ParseException
+     */
     private void validPhoneNumber(String phoneNo) throws ParseException{
 
         if (phoneNo == null || !phoneNo.matches("\\d{3}-\\d{3}-\\d{4}")) {
@@ -479,6 +549,12 @@ public class PhoneBillGwt implements EntryPoint {
         }
     }
 
+    /**
+     *
+     * @param dateTimeString
+     * @return
+     * @throws ParseException
+     */
     private Date checkDateAndTimeFormat(String dateTimeString) throws ParseException{
 
         Date dateTime = null;
@@ -493,6 +569,9 @@ public class PhoneBillGwt implements EntryPoint {
         return dateTime;
     }
 
+    /**
+     *
+     */
     private void  initHeadTable() {
 
         if (flexTable.getRowCount() != 0)
@@ -500,15 +579,19 @@ public class PhoneBillGwt implements EntryPoint {
 
         flexTable.setWidth("900px");
 
-        flexTable.setText(0, 0, "NO:");
-        flexTable.setText(0, 1, "START TIME");
-        flexTable.setText(0, 2, "END TIME");
-        flexTable.setText(0, 3, "CALLER NUMBER");
-        flexTable.setText(0, 4, "CALLEE NUMBER");
-        flexTable.setText(0, 5, "DURATION");
+        flexTable.setText(1, 0, "NO:");
+        flexTable.setText(1, 1, "START TIME");
+        flexTable.setText(1, 2, "END TIME");
+        flexTable.setText(1, 3, "CALLER NUMBER");
+        flexTable.setText(1, 4, "CALLEE NUMBER");
+        flexTable.setText(1, 5, "DURATION");
 
     }
 
+    /**
+     *
+     * @param s
+     */
     private void getLabel(String s) {
         label = new Label(s);
     }
